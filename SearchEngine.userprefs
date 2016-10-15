@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="SearchEngine/SearchEngine.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="SearchEngine/Document.cs">
+    <Files>
+      <File FileName="SearchEngine/Program.cs" Line="94" Column="4" />
+      <File FileName="SearchEngine/Stemmer.cs" Line="423" Column="9" />
+      <File FileName="SearchEngine/Document.cs" Line="12" Column="59" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
