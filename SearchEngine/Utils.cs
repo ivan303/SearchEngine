@@ -41,7 +41,6 @@ namespace SearchEngine
 		public static double calculateVectorsCosinus (List<double> queryVector, List<double> documentVector) {
 			double queryVectorLen = vectorLength (queryVector);
 			double documentVectorLen = vectorLength (documentVector);
-			// TODO check if returning 0 here is proper behavior
 			if (queryVectorLen == 0 || documentVectorLen == 0) {
 				return 0;
 			}

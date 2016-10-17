@@ -18,14 +18,6 @@ namespace SearchEngine
 			stemmer = new Stemmer ();
 		}
 
-		public Document getNthDocument (int number) {
-			try {
-				return documents[number];
-			} catch (ArgumentOutOfRangeException e) {
-				throw e;
-			}
-		}
-
 		public void readDocumentsFile(string filename) {
 			try {
 				StreamReader sr = new StreamReader (filename);
@@ -58,14 +50,6 @@ namespace SearchEngine
 			}
 		}
 
-		public string getNthKeyword (int number) {
-			try {
-				return keywords[number];
-			} catch (ArgumentOutOfRangeException e) {
-				throw e;
-			}
-		}
-
 		public List<double> createIDFVector () {
 			List<double> IDFVector = new List<double> ();
 			double docsWithKeyword;
@@ -81,6 +65,23 @@ namespace SearchEngine
 			return IDFVector;
 		}
 
+		public int readDocumentNumber () {
+			Console.WriteLine ("Type document number.");
+			while (true) {
+				int number;
+				bool result = Int32.TryParse (Console.ReadLine (), out number);
+				if (result) {
+					if (number < 1 || number > documents.Count) {
+						Console.WriteLine ("Document index out of bounds. Try again.");
+					} else {
+						return number - 1;
+					}
+				} else {
+					Console.WriteLine ("Invalid input. Try again.");
+				}
+			}
+		}
+
 		public static void Main (string[] args)
 		{
 			SearchEngine searchEngine = new SearchEngine ();
@@ -91,7 +92,7 @@ namespace SearchEngine
 					foreach (string keyword in searchEngine.keywords) {
 						searchEngine.stemmedKeywords.Add(Utils.stemToken(keyword, searchEngine.stemmer));
 					}
-					// TODO check if it's necessary to get rid of repeated words
+					searchEngine.stemmedKeywords = searchEngine.stemmedKeywords.Distinct().ToList();
 					break;
 				} catch (FileNotFoundException) {
 					Console.WriteLine ("File not found. Try again.");
@@ -121,7 +122,8 @@ namespace SearchEngine
 				if (closing) {
 					break;
 				}
-				Console.WriteLine ("Choose action: 1 - search, 2 - display document, 3 - quit");
+				Console.WriteLine ("Choose action: 1 - search, 2 - display document, " + 
+					"3 - display tokens, 4 - display stemmed tokens, 5 - quit");
 				action = Console.ReadLine ();
 				switch (action) 
 				{
@@ -150,23 +152,18 @@ namespace SearchEngine
 					}
 					break;
 				case "2":
-					Console.WriteLine ("Type document number.");
-					while (true) {
-						int number;
-						bool result = Int32.TryParse (Console.ReadLine (), out number);
-						if (result) {
-							if (number < 1 || number > searchEngine.documents.Count) {
-								Console.WriteLine ("Document index out of bounds. Try again.");
-							} else {
-								searchEngine.documents [number - 1].displayDocument ();
-								break;
-							}
-						} else {
-							Console.WriteLine ("Invalid input. Try again.");
-						}
-					}
+					searchEngine.documents[searchEngine.readDocumentNumber()]
+						.displayDocument();
 					break;
 				case "3":
+					searchEngine.documents [searchEngine.readDocumentNumber ()]
+						.displayTokens ();
+					break;
+				case "4":
+					searchEngine.documents [searchEngine.readDocumentNumber ()]
+						.displayStemmedTokens ();
+					break;
+				case "5":
 					Console.WriteLine ("Closing.");
 					closing = true;
 					break;
@@ -175,24 +172,6 @@ namespace SearchEngine
 					break;
 				}
 			}
-				
-
-//			foreach (string token in searchEngine.getNthDocument (0).tokens) {
-//				Console.WriteLine (token);
-//			}
-//
-//			foreach (string token in searchEngine.getNthDocument (0).stemmedTokens) {
-//				Console.WriteLine (token);
-//			}
-//			Console.WriteLine(searchEngine.documents[0].lines[0]);
-//			Console.WriteLine (searchEngine.documents [0].title);
-//			searchEngine.documents[5].displayDocument();
-//			searchEngine.documents [5].displayTokens ();
-//			searchEngine.documents [5].displayStemmedTokens ();
-//			searchEngine.documents [5].createTFVector (searchEngine.stemmedKeywords);
-//			searchEngine.documents [5].createIDFVector (2);
-			 
-
 		}
 	}
 }

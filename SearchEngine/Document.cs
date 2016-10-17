@@ -15,7 +15,6 @@ namespace SearchEngine
 		public List<string> stemmedTokens = new List<string>();
 		public List<double> TFVector;
 		public List<double> TFIDFVector;
-		public double TFIDFVectorLenght { get; set; }
 
 		public Document () {}
 
