@@ -19,9 +19,8 @@ namespace SearchEngine
 		}
 
 		public void readDocumentsFile(string filename) {
-			try {
-				StreamReader sr = new StreamReader (filename);
-
+			
+			using (StreamReader sr = new StreamReader (filename)) {
 				while (sr.Peek () >= 0) {
 					string line = sr.ReadLine();
 					Document document = new Document();
@@ -32,21 +31,16 @@ namespace SearchEngine
 					document.title = document.lines[0];
 					documents.Add(document);
 				}
-			} catch (Exception e) {
-				throw e;
 			}
 		}
 
 		public void readKeywordsFile(string filename) {
-			try {
-				StreamReader sr = new StreamReader(filename);
 
+			using (StreamReader sr = new StreamReader (filename)) {
 				while (sr.Peek () >= 0) {
 					string keyword = sr.ReadLine();
 					keywords.Add(keyword);
 				}
-			} catch (Exception e) {
-				throw e;
 			}
 		}
 
@@ -96,6 +90,8 @@ namespace SearchEngine
 					break;
 				} catch (FileNotFoundException) {
 					Console.WriteLine ("File not found. Try again.");
+				} catch (ArgumentException) {
+					Console.WriteLine ("Invalid file name. Try again.");
 				}
 			}
 
@@ -113,6 +109,8 @@ namespace SearchEngine
 					break;
 				} catch (FileNotFoundException) {
 					Console.WriteLine ("File not found. Try again.");
+				} catch (ArgumentException) {
+					Console.WriteLine ("Invalid file name. Try again.");
 				}
 			}
 
