@@ -187,12 +187,12 @@ namespace SearchEngine
                         int index = 0;
                         foreach (KeyValuePair<Document, double> kvp in sorted)
                         {
-                            Console.WriteLine(index+"." + kvp.Value + " " + kvp.Key.title);
+                            Console.WriteLine(index + "." + kvp.Value + " " + kvp.Key.title);
                             index++;
                         }
                         Console.WriteLine("Do you want to choose relevent documents. 1 - yes, 2 - no");
                         var choose = Console.ReadLine();
-                        switch(choose)
+                        switch (choose)
                         {
                             case "1":
                                 {
@@ -202,11 +202,36 @@ namespace SearchEngine
                                     var relevant = Utils.getRelevantDocuments(intDocumentsIndexes, sorted.ToList());
                                     var unRelevant = Utils.getUnRelevantDocuments(intDocumentsIndexes, sorted.ToList());
                                     var newQuery = Utils.calculateNewQueryTFIDFQuery(relevant, unRelevant, queryTFIDFVector);
+                                    //create new list of keys 
+                                    Dictionary<string, double> keyWords = new Dictionary<string, double>();
+                                    for (int i = 0; i < newQuery.Count(); i++)
+                                    {
+                                        keyWords.Add(searchEngine.stemmedKeywords[i], newQuery[i]);
+                                    }
+                                    var sortedKeyWords = keyWords.OrderByDescending(i => i.Value);
+                                    foreach (var k in sortedKeyWords)
+                                    {
+                                        if (k.Value != 0)
+                                        {
+                                            Console.WriteLine($"{k.Key} {k.Value}");
+                                        }
+                                    }
+                                    Console.WriteLine("Type new query");
+                                    string query1 = Console.ReadLine();
+                                    string[] queryTokens1 = Utils.extractTokens(query1);
+                                    List<string> stemmedQueryTokens1 = new List<string>();
+                                    foreach (string token in queryTokens1)
+                                    {
+                                        stemmedQueryTokens1.Add(Utils.stemToken(token, searchEngine.stemmer));
+                                    }
+                                    List<double> queryTFVector1 = Utils.createTFVector(searchEngine.stemmedKeywords, stemmedQueryTokens1);
+                                    List<double> queryTFIDFVector1 = Utils.multiplyVectorsCoords(queryTFVector1, searchEngine.IDFVector);
+
                                     Dictionary<Document, double> vectorsCosinus1 = new Dictionary<Document, double>();
                                     double cosinus1 = 0;
                                     foreach (Document doc in searchEngine.documents)
                                     {
-                                        cosinus1 = Utils.calculateVectorsCosinus(newQuery, doc.TFIDFVector);
+                                        cosinus1 = Utils.calculateVectorsCosinus(queryTFIDFVector1, doc.TFIDFVector);
                                         vectorsCosinus1.Add(doc, cosinus1);
                                     }
 
