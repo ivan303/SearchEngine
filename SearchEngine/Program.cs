@@ -99,6 +99,27 @@ namespace SearchEngine
         public static void Main(string[] args)
         {
             SearchEngine searchEngine = new SearchEngine();
+
+			const int SEARCH_ENGINE = 1;
+			const int GROUPING_ENGINE = 2;
+			int mode;
+
+			Console.WriteLine ("Choose mode: 1 - search engine, 2 - k-means grouping");
+			while (true) {
+				bool result = Int32.TryParse(Console.ReadLine(), out mode);
+				if (result) 
+				{
+					if (mode != 1 && mode != 2) {
+						Console.WriteLine ("Invalid mode. Try again.");	
+					} else {
+						break;
+					}
+				} 
+				else {
+					Console.WriteLine ("Invalid input. Try again.");
+				}
+			}
+
             Console.WriteLine("Type keywords file name.");
             while (true)
             {
@@ -130,7 +151,11 @@ namespace SearchEngine
                     searchEngine.readDocumentsFile(Console.ReadLine());
                     foreach (Document doc in searchEngine.documents)
                     {
-                        doc.processDocument(searchEngine.stemmedKeywords, searchEngine.stemmer);
+						if (mode == SEARCH_ENGINE) {
+							doc.processDocument(searchEngine.stemmedKeywords, searchEngine.stemmer, true);
+						} else {
+							doc.processDocument(searchEngine.stemmedKeywords, searchEngine.stemmer, false);
+						}
                     }
                     searchEngine.IDFVector = searchEngine.createIDFVector();
                     foreach (Document doc in searchEngine.documents)
@@ -148,6 +173,10 @@ namespace SearchEngine
                     Console.WriteLine("Invalid file name. Try again.");
                 }
             }
+
+
+
+
 
             string action = "";
             bool closing = false;

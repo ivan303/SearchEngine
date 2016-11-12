@@ -18,17 +18,18 @@ namespace SearchEngine
 
 		public Document () {}
 
-		public void processDocument (List<string> keywords, Stemmer stemmer) {
-			extractTokens ();
+		public void processDocument (List<string> keywords, Stemmer stemmer, bool withTitle = true) {
+			extractTokens (withTitle);
 			foreach (string token in tokens) {
 				stemmedTokens.Add (Utils.stemToken (token, stemmer));
 			}
 			TFVector = Utils.createTFVector(keywords, stemmedTokens);
 		}
 
-		public void extractTokens() {
+		public void extractTokens(bool withTitle) {
 			string allLines = "";
-			foreach (var line in lines) {
+			var linesToProcess = withTitle ? lines : lines.Skip (1);
+			foreach (var line in linesToProcess) {
 				allLines = string.Concat (allLines, line + " ");
 			}
 			tokens = Utils.extractTokens (allLines);
