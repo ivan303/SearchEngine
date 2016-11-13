@@ -38,6 +38,7 @@
     <Compile Include="Document.cs" />
     <Compile Include="Stemmer.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="GroupEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\documents.txt" />
