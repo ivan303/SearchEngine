@@ -39,6 +39,7 @@ namespace SearchEngine
 			}
 
 			iterate (docs);
+			Console.WriteLine ("Iteration: 1 done");
 			iterationsNumber--;
 			for (int i = 0; i < iterationsNumber; i++) {
 				if (iterationsUnchanged (i + 1)) {
@@ -55,14 +56,8 @@ namespace SearchEngine
 				}
 				Console.WriteLine ();
 			}
-				
-		}
 
-		public void clearGroups ()
-		{
-			foreach (Group g in groups) {
-				g.documents.Clear ();
-			}
+				
 		}
 
 		public bool iterationsUnchanged(int iterationsPassed) {

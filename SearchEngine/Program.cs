@@ -250,7 +250,7 @@ namespace SearchEngine
 							bool result = Int32.TryParse (Console.ReadLine (), out groupsNumber);
 							if (result) {
 								// TODO: define maximal number of groups
-								if (groupsNumber < 2 || groupsNumber > 9) {
+								if (groupsNumber < 2 || groupsNumber > 20) {
 									Console.WriteLine ("Invalid groups number. Try again.");
 								} else {
 									break;
