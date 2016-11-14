@@ -31,7 +31,8 @@ namespace SearchEngine
 				doc = docs [rnd.Next (0, upperBound)];
 				docs.Remove (doc);
 				group = new Group ();
-				group.documents.Add (doc);
+				group.documents.Add (new List<Document> ());
+				group.documents.Last().Add (doc);
 				group.calculateCentroid ();
 				groups.Add (group);
 				upperBound--;
@@ -40,12 +41,16 @@ namespace SearchEngine
 			iterate (docs);
 			iterationsNumber--;
 			for (int i = 0; i < iterationsNumber; i++) {
-				clearGroups ();
+				if (iterationsUnchanged (i + 1)) {
+					break;
+				}
+
 				iterate (searchEngine.documents);
+				Console.WriteLine ("Iteration: " + (i + 2) + " done");
 			}
 
 			foreach (Group g in groups) {
-				foreach (Document d in g.documents) {
+				foreach (Document d in g.documents.Last()) {
 					Console.WriteLine (d.title);
 				}
 				Console.WriteLine ();
@@ -60,11 +65,25 @@ namespace SearchEngine
 			}
 		}
 
+		public bool iterationsUnchanged(int iterationsPassed) {
+			if (iterationsPassed > 2) {
+				bool oneBeforeLast = groups.All(group => group.documents.Last().SequenceEqual(group.documents[group.documents.Count - 2]));
+				bool twoBeforeLast = groups.All(group => group.documents.Last().SequenceEqual(group.documents[group.documents.Count - 3]));
+				if (oneBeforeLast && twoBeforeLast) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public void iterate (List<Document> docs)
 		{
 			double maxSimilarity;
 			Group bestGroup;
 			double similarity;
+			foreach (Group g in groups) {
+				g.documents.Add (new List<Document> ());
+			}
 			foreach (Document d in docs) {
 				maxSimilarity = 0;
 				bestGroup = groups [0];
@@ -75,7 +94,7 @@ namespace SearchEngine
 						bestGroup = g;
 					}
 				}
-				bestGroup.documents.Add (d);
+				bestGroup.documents.Last().Add (d);
 			}
 			foreach (Group g in groups) {
 				g.calculateCentroid ();
@@ -88,15 +107,15 @@ namespace SearchEngine
 
 	public class Group
 	{
-		public List<Document> documents = new List<Document> ();
+		public List<List<Document>> documents = new List<List<Document>> ();
 		public List<double> centroid;
 
 		public void calculateCentroid ()
 		{
-			int docsNumber = documents.Count;
+			int docsNumber = documents.Last().Count;
 			if (docsNumber > 0) {
-				List<double> acc = Enumerable.Repeat (0d, documents [0].TFIDFVector.Count).ToList ();
-				foreach (Document d in documents) {
+				List<double> acc = Enumerable.Repeat (0d, documents.Last ()[0].TFIDFVector.Count).ToList ();
+				foreach (Document d in documents.Last()) {
 					acc = Utils.addVectorsCoords (acc, d.TFIDFVector);
 				}
 				centroid = acc.Select (i => i / docsNumber).ToList ();

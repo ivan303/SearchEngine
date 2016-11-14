@@ -10,23 +10,27 @@ namespace SearchEngine
 	{
 		public string title { get; set; }
 
-		public List<string> lines = new List<string>();
+		public List<string> lines = new List<string> ();
 		public string[] tokens;
-		public List<string> stemmedTokens = new List<string>();
+		public List<string> stemmedTokens = new List<string> ();
 		public List<double> TFVector;
 		public List<double> TFIDFVector;
 
-		public Document () {}
+		public Document ()
+		{
+		}
 
-		public void processDocument (List<string> keywords, Stemmer stemmer, bool withTitle = true) {
+		public void processDocument (List<string> keywords, Stemmer stemmer, bool withTitle = true)
+		{
 			extractTokens (withTitle);
 			foreach (string token in tokens) {
 				stemmedTokens.Add (Utils.stemToken (token, stemmer));
 			}
-			TFVector = Utils.createTFVector(keywords, stemmedTokens);
+			TFVector = Utils.createTFVector (keywords, stemmedTokens);
 		}
 
-		public void extractTokens(bool withTitle) {
+		public void extractTokens (bool withTitle)
+		{
 			string allLines = "";
 			var linesToProcess = withTitle ? lines : lines.Skip (1);
 			foreach (var line in linesToProcess) {
@@ -35,22 +39,25 @@ namespace SearchEngine
 			tokens = Utils.extractTokens (allLines);
 		}
 
-		public void displayDocument () {
+		public void displayDocument ()
+		{
 			foreach (string line in lines) {
 				Console.WriteLine (line);
 			}
 		}
 
-		public void displayTokens () {
+		public void displayTokens ()
+		{
 			foreach (string token in tokens) {
 				Console.Write (token + " ");
 			}
 			Console.WriteLine ();
 		}
 
-		public void displayStemmedTokens () {
+		public void displayStemmedTokens ()
+		{
 			foreach (string token in stemmedTokens) {
-				Console.Write (token + " " );
+				Console.Write (token + " ");
 			}
 			Console.WriteLine ();
 		}
